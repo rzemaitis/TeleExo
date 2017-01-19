@@ -16,6 +16,7 @@ def targetfind():
 #Deals with target finding after the jump
 #def afterjumper():
 
+#Create files for output
 targetpath ="./Data/"
 
 targetfile = open(targetpath + "Target_star.txt", "w")
@@ -26,20 +27,24 @@ referencefile = open(targetpath + "Reference_stars","w")
 #Set all filenames
 #Set path
 #namepath="../Exoplanets1/"
-namepath="./"
-#Set catalog name
-namecat="test.cat"
+namepath="../Exoplanets1"
 #Example"../Exoplanets1/qatar1b_r_10s_2_138.fits"
 namebase="qatar1b_r_10s_"
-nameroot=".fits"
+nameroot=".cat"
 
+#Hardwired numbers for listed stuff
+xcoord=5
+ycoord=0
+mag=3
+magerr=4
 
-#Create a catalog
+#Create a list of catalogs
 cat=[]
 
-#Create jumpcount and filecount
+#Create jumpcount, filecount for that jump with global file counter
 jump=1
 filecount=1
+globcount=1
 
 
 #Create an initial filename
@@ -53,13 +58,13 @@ print("Will check %s\n" %fname)
 #Start the main loop
 #Start with checking if file exists after a jump:
 while os.path.isfile(fname):
+	#Find a star
 	while os.path.isfile(fname):
+
 		#Create a line array and a data array
 		lines=[]
 		data=[]
-		#Execute sextractor
-		process = subprocess.Popen("sextractor "+ fname+" -c "+namepath+"config/default.sex", shell=True)
-		process.wait()
+
 		#Read lines without comments
 		with open(fname) as f:
 			for line in f:
@@ -74,12 +79,20 @@ while os.path.isfile(fname):
 			a=lines[i].split()
 			data.append(a)
 
-		#Increment filecount and create a new name
-		filecount += 1
-		fname=namepath+namebase+str(jump)+"_"+str(filecount).zfill(3)+nameroot
-
 		#Put the whole data into a catalog
 		cat.append(data)
+		
+		#
+		#
+		#
+		#
+		#Do something with data for this star
+		tarindex=targetfind()
+		
+		#Increment filecount and create a new name
+		filecount += 1
+		globcount += 1
+		fname=namepath+namebase+str(jump)+"_"+str(filecount).zfill(3)+nameroot
 
 	print("\nJump or end of files detected\n") 
 	#Increment the jump and reset filecount
@@ -87,7 +100,7 @@ while os.path.isfile(fname):
 	print(jump)
 	filecount=1
 	#Create a new name
-	fname=namepath+namebase+str(jump)+str(filecount).zfill(3)+nameroot
+	fname=namepath+namebase+str(jump)+"_"+str(filecount).zfill(3)+nameroot
 #
 #
 #
