@@ -1,6 +1,4 @@
-import numpy as np
 import os
-import time
 import subprocess
 
 #Set all strings for file paths
@@ -31,13 +29,13 @@ while os.path.isfile(fname):
 		#Execute sextractor
 		process = subprocess.Popen("sextractor "+ fname+" -c "+namepath+"config/default.sex", shell=True)
 		process.wait()
-		#Increment filecount and create a new name
-		filecount += 1
-		fname=namepath+namebase+str(jump)+"_"+str(filecount).zfill(3)+nameroot
 		#Change name of test.cat to name of fits file, but with .cat extension
 		rename = subprocess.Popen("mv "+defaultcat+" "+namepath+fname.replace(nameroot,catname), shell=True)		
 		print("mv "+defaultcat+" "+namepath+fname.replace(nameroot,catname))
 		rename.wait()
+		#Increment filecount and create a new name
+		filecount += 1
+		fname=namepath+namebase+str(jump)+"_"+str(filecount).zfill(3)+nameroot
 	print("\nJump or end of files detected\n") 
 	#Increment the jump and reset filecount
 	jump += 1
