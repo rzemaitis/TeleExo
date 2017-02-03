@@ -4,10 +4,11 @@ import time
 import subprocess
 import sys
 import math
+import signal
 
 #An initial target-defining function
 def targetfind(stars,fname,cat,xcoord,ycoord):
-	print("emacs "+fname+".cat&\n")
+	print("emacs "+fname+".cat\n")
 	emacscat = subprocess.Popen("emacs "+fname, shell=True)
 	#CONTINUE HERE, FIX GAIA PLS
 	#gaiacat = subprocess.Popen("gaia "+fname.rstrip(".cat")+".fits&", shell=True)
@@ -15,39 +16,41 @@ def targetfind(stars,fname,cat,xcoord,ycoord):
 	print("For gaia, get a new terminal, and write\n")
 	print("gaia "+os.getcwd()+"/"+fname.rstrip(".cat")+".fits&\n")
 	#os.system("gaia ../Exoplanets1/check.fits&")
+	gaiacat = subprocess.Popen("gaia ../Exoplanets1/check.fits", shell=True)
 	print("Please find your object and write its number.\n")
-	print("While you're at it, select " + str((len(stars)-1))+ " target stars from the list:\n")
+	print("While you're at it, select " + str((len(stars)))+ " target stars from the list:\n")
 	read = raw_input("Target star id?\n")
-	
+	read=int(read)-1
 	stars[0][0]=int(read)
 	stars[0][1]=cat[0][int(read)][xcoord]
 	stars[0][2]=cat[0][int(read)][ycoord]
-	for i in range(1,len(stars)-1):
+	print cat[0][int(stars[0][0])][xcoord]
+	for i in range(1,len(stars)):
 		read = raw_input("Reference star %d?\n" %i)
+		read=int(read)-1
 		stars[i][0]=int(read)
 		stars[i][1]=cat[0][int(read)][xcoord]
 		stars[i][2]=cat[0][int(read)][ycoord]
+	emacscat.terminate()
 	emacscat.kill()
 
 #Finds stars of interest in the next frame
 def nextfind(stars,cat,xcoord,ycoord,catid,limit):
-	for i in range(0,len(stars)-1):
+	for i in range(0,len(stars)):
 		min=limit
 		dist=limit+1
 		starid=0
-		for j in range(0,len(cat[catid])-1):
-			print cat[catid][j][xcoord]
-			print stars[i][1]
+		for j in range(0,len(cat[catid])):
 			x=float(cat[catid][j][xcoord])-float(stars[i][1])
 			y=float(cat[catid][j][ycoord])-float(stars[i][2])
 			dist=math.sqrt(x**2+y**2)
 			if(dist<min):
 				min=dist
 				starid=j
-		if(min>limit):
+		if(min>limit or starid==0):
 			sys.exit("SCRIPT PANIC: UNEXPECTED JUMP DETECTED")
 		else:
-			stars[i][0]=cat[catid][starid][0]
+			stars[i][0]=int(cat[catid][starid][0])-1
 			stars[i][1]=cat[catid][starid][xcoord]
 			stars[i][2]=cat[catid][starid][ycoord]
 
@@ -62,35 +65,40 @@ def afterjumper(stars,fname,cat,xcoord,ycoord,catid,limit):
 	#os.system("gaia ../Exoplanets1/check.fits&")
 	distlistx=[]
 	distlisty=[]
-	for i in range(1,len(stars)-1):
+	for i in range(1,len(stars)):
 		distlistx.append(float(stars[0][1]-stars[i][1]))
 		distlisty.append(float(stars[0][2]-stars[i][2]))
 	print("Please find your object again and write its number.\n")
+	print "Distlistx "+str(distlistx[0])+"Distlisty "+str(distlisty[0])
+	print "This was for stars "+ str(stars[0][0]) + "  "+str(stars[1][0])
+	print "Their x coordinates " + str(stars[0][1])+ " "+str(stars[1][1])
 	read = raw_input("Target star id?\n")
+	read=int(read)-1
 	stars[0][0]=int(read)
 	stars[0][1]=cat[catid][int(read)][xcoord]
 	stars[0][2]=cat[catid][int(read)][ycoord]
-	for i in range(0,len(stars)-1):
+	for i in range(1,len(stars)):
 		distx=distlistx[i-1]
 		disty=distlisty[i-1]
 		min=limit+1
 		starid=0
-		for j in range(0,len(cat[catid])-1):
+		for j in range(0,len(cat[catid])):
 			x=float(stars[0][1])-float(cat[catid][j][xcoord])
 			y=float(stars[0][2])-float(cat[catid][j][ycoord])
+			print str((distx-x)) + str((disty-y))
 			diff=abs(distx-x)+abs(disty-y)
-			print diff
+			print "X "+str(x)+"Y "+str(y)
 			if(diff<min):
 				min=diff
 				starid=j
-		print(min)
 		if(min>limit):
 			emacscat.kill()
 			sys.exit("SCRIPT PANIC: REFERENCE STAR NOT FOUND")
 		else:
-			stars[i][0]=cat[catid][starid][0]
+			stars[i][0]=int(cat[catid][starid][0])-1
 			stars[i][1]=cat[catid][starid][xcoord]
 			stars[i][2]=cat[catid][starid][ycoord]
+	emacscat.terminate()
 	emacscat.kill()
 
 #Create files for output
@@ -132,8 +140,8 @@ staramount=5
 stars=np.zeros((staramount,4))
 
 #Choose an appropriate limit of star's coordinate drift and before it is considered an unexpected jump
-limit=200
-limit2=500
+limit=50
+limit2=50
 
 #Create an initial filename
 fname=namepath+namebase+str(jump)+"_"+str(filecount).zfill(3)+nameroot
@@ -159,7 +167,7 @@ while os.path.isfile(fname):
 					lines.append(line)
 		f.close()
 		#Split lines into values, and put them into data array
-		for i in range (0,len(lines)-1):
+		for i in range (0,len(lines)):
 			a=lines[i].split()
 			data.append(a)
 		#Put the whole data into a catalog
@@ -178,12 +186,14 @@ while os.path.isfile(fname):
 		#
 		#
 		#Do something with data for this star
-		for i in range(0,len(stars)-1):
+		for i in range(0,len(stars)):
 			stars[i][3]= cat[globcount-1][int(stars[i][0])][flux]
 		#Create a string containting data
 		info="%6d"%globcount
-		for i in range(0,len(stars)-1):
-			info += "%6d"%stars[i][3]
+		for i in range(0,len(stars)):
+			info += "%10f"%stars[i][3]
+		#I ADDED STARID, DELET DIS
+		info+="%10d"%int(stars[0][0]-1)
 		info+='\n'
 		targetfile.write(info)
 		#Increment filecount and create a new name
