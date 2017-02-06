@@ -5,26 +5,31 @@ import subprocess
 import sys
 import math
 import signal
+from colorama import init
+from colorama import Fore, Back, Style
+
+#Init colorama
+init(autoreset=True)
 
 #An initial target-defining function
 def targetfind(stars,fname,cat,xcoord,ycoord):
-	print("emacs "+fname+".cat\n")
+	print(Fore.BLUE+"emacs "+fname+".cat\n")
 	emacscat = subprocess.Popen("emacs "+fname, shell=True)
 	#CONTINUE HERE, FIX GAIA PLS
 	#gaiacat = subprocess.Popen("gaia "+fname.rstrip(".cat")+".fits&", shell=True)
 	#Gaia denies permission, solve the issue?
-	print("For gaia, get a new terminal, and write\n")
-	print("gaia "+os.getcwd()+"/"+fname.rstrip(".cat")+".fits&\n")
+	print(Fore.GREEN+"For gaia, get a new terminal, and write\n")
+	print(Fore.YELLOW+"gaia "+os.getcwd()+"/"+fname.rstrip(".cat")+".fits&\n")
 	#os.system("gaia ../Exoplanets1/check.fits&")
 	gaiacat = subprocess.Popen("gaia ../Exoplanets1/check.fits", shell=True)
-	print("Please find your object and write its number.\n")
-	print("While you're at it, select " + str((len(stars)))+ " target stars from the list:\n")
-	read = raw_input("Target star id?\n")
+	print(Fore.GREEN+"Please find your object and write its number.\n")
+	print(Fore.GREEN+"While you're at it, select " + str((len(stars)-1))+ " target stars from the list:\n")
+	read = raw_input(Fore.GREEN+"Target star id?\n")
 	read=int(read)-1
 	stars[0][0]=int(read)
 	stars[0][1]=cat[0][int(read)][xcoord]
 	stars[0][2]=cat[0][int(read)][ycoord]
-	print cat[0][int(stars[0][0])][xcoord]
+	#print cat[0][int(stars[0][0])][xcoord]
 	for i in range(1,len(stars)):
 		read = raw_input("Reference star %d?\n" %i)
 		read=int(read)-1
@@ -48,7 +53,7 @@ def nextfind(stars,cat,xcoord,ycoord,catid,limit):
 				min=dist
 				starid=j
 		if(min>limit or starid==0):
-			sys.exit("SCRIPT PANIC: UNEXPECTED JUMP DETECTED")
+			sys.exit(Fore.RED+"SCRIPT PANIC: UNEXPECTED JUMP DETECTED")
 		else:
 			stars[i][0]=int(cat[catid][starid][0])-1
 			stars[i][1]=cat[catid][starid][xcoord]
@@ -60,18 +65,18 @@ def afterjumper(stars,fname,cat,xcoord,ycoord,catid,limit):
 	#CONTINUE HERE, FIX GAIA PLS
 	#gaiacat = subprocess.Popen("gaia "+fname.rstrip(".cat")+".fits&", shell=True)
 	#Gaia denies permission, solve the issue?
-	print("For gaia, get a new terminal, and write")
-	print("gaia "+os.getcwd()+"/"+fname.rstrip(".cat")+".fits&\n")
+	print(Fore.GREEN+"For gaia, get a new terminal, and write")
+	print(Fore.YELLOW+"gaia "+os.getcwd()+"/"+fname.rstrip(".cat")+".fits&\n")
 	#os.system("gaia ../Exoplanets1/check.fits&")
 	distlistx=[]
 	distlisty=[]
 	for i in range(1,len(stars)):
 		distlistx.append(float(stars[0][1]-stars[i][1]))
 		distlisty.append(float(stars[0][2]-stars[i][2]))
-	print("Please find your object again and write its number.\n")
-	print "Distlistx "+str(distlistx[0])+"Distlisty "+str(distlisty[0])
-	print "This was for stars "+ str(stars[0][0]) + "  "+str(stars[1][0])
-	print "Their x coordinates " + str(stars[0][1])+ " "+str(stars[1][1])
+	print(Fore.GREEN+"Please find your object again and write its number.\n")
+	print Fore.BLUE+"Distlistx "+str(distlistx[0])+"Distlisty "+str(distlisty[0])
+	print Fore.BLUE+"This was for stars "+ str(stars[0][0]) + "  "+str(stars[1][0])
+	print Fore.BLUE+"Their x coordinates " + str(stars[0][1])+ " "+str(stars[1][1])
 	read = raw_input("Target star id?\n")
 	read=int(read)-1
 	stars[0][0]=int(read)
@@ -85,15 +90,15 @@ def afterjumper(stars,fname,cat,xcoord,ycoord,catid,limit):
 		for j in range(0,len(cat[catid])):
 			x=float(stars[0][1])-float(cat[catid][j][xcoord])
 			y=float(stars[0][2])-float(cat[catid][j][ycoord])
-			print str((distx-x)) + str((disty-y))
+			print Fore.BLUE+str((distx-x)) + str((disty-y))
 			diff=abs(distx-x)+abs(disty-y)
-			print "X "+str(x)+"Y "+str(y)
+			print Fore.BLUE+"X "+str(x)+"Y "+str(y)
 			if(diff<min):
 				min=diff
 				starid=j
 		if(min>limit):
 			emacscat.kill()
-			sys.exit("SCRIPT PANIC: REFERENCE STAR NOT FOUND")
+			sys.exit(Fore.RED+"SCRIPT PANIC: REFERENCE STAR NOT FOUND")
 		else:
 			stars[i][0]=int(cat[catid][starid][0])-1
 			stars[i][1]=cat[catid][starid][xcoord]
@@ -140,8 +145,8 @@ staramount=5
 stars=np.zeros((staramount,4))
 
 #Choose an appropriate limit of star's coordinate drift and before it is considered an unexpected jump
-limit=50
-limit2=50
+limit=100
+limit2=100
 
 #Create an initial filename
 fname=namepath+namebase+str(jump)+"_"+str(filecount).zfill(3)+nameroot
@@ -153,7 +158,7 @@ output = open("Output.txt", "w")
 #Start with checking if file exists after a jump:
 while os.path.isfile(fname):
 	while os.path.isfile(fname):
-		print("Will check %s\n" %fname)
+		print(Fore.GREEN+"Will check %s\n" %fname)
 		#Create a line array and a data array
 		lines=[]
 		data=[]
@@ -191,7 +196,7 @@ while os.path.isfile(fname):
 		#Create a string containting data
 		info="%6d"%globcount
 		for i in range(0,len(stars)):
-			info += "%10f"%stars[i][3]
+			info += "%15f"%stars[i][3]
 		#I ADDED STARID, DELET DIS
 		info+="%10d"%int(stars[0][0]-1)
 		info+='\n'
@@ -201,7 +206,7 @@ while os.path.isfile(fname):
 		globcount += 1
 		fname=namepath+namebase+str(jump)+"_"+str(filecount).zfill(3)+nameroot
 
-	print("\nJump or end of files detected\n") 
+	print(Fore.GREEN+"\nJump or end of files detected\n") 
 	#Increment the jump and reset filecount
 	jump += 1
 	filecount=1
