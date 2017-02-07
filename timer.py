@@ -20,6 +20,7 @@ targetpath ="./Data/"
 
 targetfile = open(targetpath + "Time.txt", "w")
 
+globcount=0
 while os.path.isfile(fname):
 	while os.path.isfile(fname):
 		hdulist = fits.open(fname)
@@ -38,6 +39,7 @@ while os.path.isfile(fname):
 			info=str(ho*3600+mi*60+se)+'\n'
 		targetfile.write(info)
 		filecount+=1
+		globcount+=1
 		fname=namepath+namebase+str(jump)+"_"+str(filecount).zfill(3)+nameroot
 		hdulist.close()
 	filecount=1

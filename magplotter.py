@@ -55,22 +55,18 @@ for i in range (0,len(lines)):
 	magerr.append(magerrs)
 #Find average magnitude and correct for it
 avgmag=np.zeros(len(mag))
-avgmagerr=np.zeros(len(mag))
-propmagerr=np.zeros(len(mag))
 propmag=np.zeros(len(mag))
 for i in range(0,len(mag)):
 	for j in range(1,len(mag[i])):
+		print "i %d"%i+" j %d"%j
+		print avgmag[i]
+		print float(mag[i][j])
 		avgmag[i]+=float(mag[i][j])
-		print magerr[i]
-		avgmagerr[i]+=(float(magerr[i][j])/ref_stars)**2
 	avgmag[i]/=ref_stars
-	avgmagerr[i]=math.sqrt(avgmagerr[i])
 	if not i==0:
 		propmag[i]=float(mag[i][0])-(avgmag[i]-avgmag[i-1])
-		propmagerr[i]=math.sqrt(float(magerr[i][0])**2+avgmagerr[i-1]**2+avgmagerr[i]**2)
 	else:
 		propmag[i]=float(mag[i][0])
-		propmagerr[i]=float(magerr[i][0])
 #Add time
 tname=namepath+timebase+timeroot
 time=[]
@@ -87,9 +83,8 @@ for i in range(0,len(time)):
 	#for j in range(0,len(avgmag)):
 #		ref+=" "+"%15f"%float(avgmag[j])
 #	referencefile.write(ref+'\n')
-	prop+=" "+str(propmag[i])+" "+str(propmagerr[i])
+	print str(propmag[i])
+	prop+=" "+str(propmag[i])
 	targetfixfile.write(prop+'\n')
 referencefile.close()
 targetfixfile.close()
-
-	

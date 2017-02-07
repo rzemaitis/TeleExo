@@ -41,24 +41,55 @@ def targetfind(stars,fname,cat,xcoord,ycoord):
 
 #Finds stars of interest in the next frame
 def nextfind(stars,cat,xcoord,ycoord,catid,limit):
-	for i in range(0,len(stars)):
-		min=limit
-		dist=limit+1
+	##Delet tis
+	mins=[]
+	#Stop delet
+	##Modified afterjumper code for safe nextfinds
+	distlistx=[]
+	distlisty=[]
+	for i in range(1,len(stars)):
+		distlistx.append(float(stars[0][1]-stars[i][1]))
+		distlisty.append(float(stars[0][2]-stars[i][2]))
+	min=limit
+	dist=limit+1
+	starid=0
+	for j in range(0,len(cat[catid])):
+		x=float(cat[catid][j][xcoord])-float(stars[0][1])
+		y=float(cat[catid][j][ycoord])-float(stars[0][2])
+		dist=math.sqrt(x**2+y**2)
+		if(dist<min):
+			min=dist
+			starid=j
+	if(min>limit or starid==0):
+		sys.exit(Fore.RED+"SCRIPT PANIC: UNEXPECTED JUMP DETECTED")
+	else:
+		mins.append(min)
+		stars[0][0]=int(cat[catid][starid][0])-1
+		stars[0][1]=cat[catid][starid][xcoord]
+		stars[0][2]=cat[catid][starid][ycoord]
+		print Fore.YELLOW+cat[catid][starid][xcoord]+" "+cat[catid][starid][ycoord]
+	for i in range(1,len(stars)):
+		distx=distlistx[i-1]
+		disty=distlisty[i-1]
+		min=limit+1
 		starid=0
 		for j in range(0,len(cat[catid])):
-			x=float(cat[catid][j][xcoord])-float(stars[i][1])
-			y=float(cat[catid][j][ycoord])-float(stars[i][2])
-			dist=math.sqrt(x**2+y**2)
-			if(dist<min):
-				min=dist
+			x=float(stars[0][1])-float(cat[catid][j][xcoord])
+			y=float(stars[0][2])-float(cat[catid][j][ycoord])
+			#print Fore.BLUE+str((distx-x)) + str((disty-y))
+			diff=abs(distx-x)+abs(disty-y)
+			#print Fore.BLUE+"X "+str(x)+"Y "+str(y)
+			if(diff<min):
+				min=diff
 				starid=j
-		if(min>limit or starid==0):
-			sys.exit(Fore.RED+"SCRIPT PANIC: UNEXPECTED JUMP DETECTED")
+		if(min>limit):
+			sys.exit(Fore.RED+"SCRIPT PANIC: REFERENCE STAR NOT FOUND")
 		else:
+			mins.append(min)
 			stars[i][0]=int(cat[catid][starid][0])-1
 			stars[i][1]=cat[catid][starid][xcoord]
 			stars[i][2]=cat[catid][starid][ycoord]
-
+	print Fore.BLUE+str(mins)
 #Deals with target finding after the jump
 def afterjumper(stars,fname,cat,xcoord,ycoord,catid,limit):
 	emacscat = subprocess.Popen("emacs "+fname, shell=True)
@@ -74,9 +105,9 @@ def afterjumper(stars,fname,cat,xcoord,ycoord,catid,limit):
 		distlistx.append(float(stars[0][1]-stars[i][1]))
 		distlisty.append(float(stars[0][2]-stars[i][2]))
 	print(Fore.GREEN+"Please find your object again and write its number.\n")
-	print Fore.BLUE+"Distlistx "+str(distlistx[0])+"Distlisty "+str(distlisty[0])
-	print Fore.BLUE+"This was for stars "+ str(stars[0][0]) + "  "+str(stars[1][0])
-	print Fore.BLUE+"Their x coordinates " + str(stars[0][1])+ " "+str(stars[1][1])
+	#print Fore.BLUE+"Distlistx "+str(distlistx[0])+"Distlisty "+str(distlisty[0])
+	#print Fore.BLUE+"This was for stars "+ str(stars[0][0]) + "  "+str(stars[1][0])
+	#print Fore.BLUE+"Their x coordinates " + str(stars[0][1])+ " "+str(stars[1][1])
 	read = raw_input("Target star id?\n")
 	read=int(read)-1
 	stars[0][0]=int(read)
@@ -90,9 +121,9 @@ def afterjumper(stars,fname,cat,xcoord,ycoord,catid,limit):
 		for j in range(0,len(cat[catid])):
 			x=float(stars[0][1])-float(cat[catid][j][xcoord])
 			y=float(stars[0][2])-float(cat[catid][j][ycoord])
-			print Fore.BLUE+str((distx-x)) + str((disty-y))
+			#print Fore.BLUE+str((distx-x)) + str((disty-y))
 			diff=abs(distx-x)+abs(disty-y)
-			print Fore.BLUE+"X "+str(x)+"Y "+str(y)
+			#print Fore.BLUE+"X "+str(x)+"Y "+str(y)
 			if(diff<min):
 				min=diff
 				starid=j
@@ -110,8 +141,8 @@ def afterjumper(stars,fname,cat,xcoord,ycoord,catid,limit):
 targetpath ="./Data/"
 
 targetfile = open(targetpath + "Target_star.txt", "w")
-targetfixfile = open(targetpath + "Target_star_fixed","w")
-referencefile = open(targetpath + "Reference_stars","w")
+#targetfixfile = open(targetpath + "Target_star_fixed","w")
+#referencefile = open(targetpath + "Reference_stars","w")
 
 
 #Set all filenames
@@ -145,7 +176,7 @@ staramount=5
 stars=np.zeros((staramount,4))
 
 #Choose an appropriate limit of star's coordinate drift and before it is considered an unexpected jump
-limit=100
+limit=200
 limit2=100
 
 #Create an initial filename
@@ -191,14 +222,13 @@ while os.path.isfile(fname):
 		#
 		#
 		#Do something with data for this star
-		for i in range(0,len(stars)):
-			stars[i][3]= cat[globcount-1][int(stars[i][0])][flux]
 		#Create a string containting data
 		info="%6d"%globcount
 		for i in range(0,len(stars)):
-			info += "%15f"%stars[i][3]
+			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][mag])
+			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][magerr])
 		#I ADDED STARID, DELET DIS
-		info+="%10d"%int(stars[0][0]-1)
+		#info+="%10d"%int(stars[0][0]-1)
 		info+='\n'
 		targetfile.write(info)
 		#Increment filecount and create a new name
