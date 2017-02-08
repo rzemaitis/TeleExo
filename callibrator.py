@@ -25,8 +25,8 @@ timebase="Time"
 timeroot=".txt"
 
 #Hardwired numbers for listed stuff (start from 0)
-magid=2
-magerrid=3
+magid=1
+magerrid=2
 mag=[]
 magerr=[]
 ref_stars=4
@@ -50,7 +50,8 @@ for i in range (0,len(lines)):
 	#Put lists into arrays
 	for j in range(0,ref_stars):
 		mags.append(a[magid+2*j])
-		magerr.append(a[magerrid+2*j])
+		magerrs.append(a[magerrid+2*j])
+		#print magerr
 	mag.append(mags)
 	magerr.append(magerrs)
 #Find average magnitude and correct for it
@@ -61,16 +62,16 @@ propmag=np.zeros(len(mag))
 for i in range(0,len(mag)):
 	for j in range(1,len(mag[i])):
 		avgmag[i]+=float(mag[i][j])
-		print magerr[i]
-		avgmagerr[i]+=(float(magerr[i][j])/ref_stars)**2
+		#print magerr[i]
+		avgmagerr[i]+=((float(magerr[i][j]))/ref_stars)**2
 	avgmag[i]/=ref_stars
 	avgmagerr[i]=math.sqrt(avgmagerr[i])
 	if not i==0:
-		propmag[i]=float(mag[i][0])-(avgmag[i]-avgmag[i-1])
-		propmagerr[i]=math.sqrt(float(magerr[i][0])**2+avgmagerr[i-1]**2+avgmagerr[i]**2)
-	else:
 		propmag[i]=float(mag[i][0])
 		propmagerr[i]=float(magerr[i][0])
+	else:
+		propmag[i]=float(mag[i][0])-(avgmag[i]-avgmag[i-1])
+		propmagerr[i]=math.sqrt(float(magerr[i][0])**2+avgmagerr[i-1]**2+avgmagerr[i]**2)
 #Add time
 tname=namepath+timebase+timeroot
 time=[]

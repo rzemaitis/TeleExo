@@ -12,14 +12,29 @@ timename="Time.txt"
 fname=targetpath+targetname
 tname=targetpath+timename
 lines=[]
+
+refstars=5
+magid=1
+
 #Read lines without comments
 with open(fname) as f:
 	for line in f:
 		if not line.startswith("#"):
 			line=line.rstrip('\n')
 			lines.append(line)
-	f.close()
-
+f.close()
+data=[]
+#Split lines into values, and put them into data array
+for i in range (0,len(lines)):
+	a=lines[i].split()
+	data.append(a)
+mag=[]
+for i in range(0,refstars):
+	mags=np.zeros(len(lines))
+	for j in range(len(lines)):
+		#print data[j][magid+(i+1)*2]
+		mags[j]=float(data[j][magid+(i)*2])
+	mag.append(mags)
 lines=[]
 with open(tname) as f:
 	for line in f:
@@ -31,26 +46,18 @@ time=np.zeros(len(lines))
 for i in range(0,len(lines)):
 	time[i]=float(lines[i])
 
-#Lists for plotting
-mag1=np.zeros(len(time))
-mag2=np.zeros(len(time))
-mag3=np.zeros(len(time))
-mag4=np.zeros(len(time))
-refstars=4
-magid=3
-
-#Split lines into values, and put them into data array
-for j in range (0,len(lines)):
-	a=lines[i].split()
-	magsappend(magid+2*j)
 	
 
 
 # Plot values
-plot = plt.plot(float(time[:]),float(mag1[:]),float(time[:]),float(mag2[:]),float(time[:]),float(mags3[:]),float(time[:]),float(mag4[:]))
-# control the axis range and labels
+for i in range(0,refstars):
+	plt.plot((time[:]),(mag[i][:]))
+# control the axis range
 #plt.xlim(5.5, 18.5)
 #plt.ylim(0, 8.0)
-plt.xlabel('Time')
+plt.xlabel('Time (seconds)')
 plt.ylabel('Magnitude')
+plt.title('Light curve uncallibrated')
+#plt.gca().set_color_cycle(["red", "green", "blue"])
+plt.gca().invert_yaxis()
 plt.show()
