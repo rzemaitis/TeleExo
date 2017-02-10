@@ -228,6 +228,10 @@ while os.path.isfile(fname):
 		for i in range(0,len(stars)):
 			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][mag])
 			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][magerr])
+		for i in range(0,len(stars)):
+			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][xcoord])
+			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][mag])
+		targetfile.write(info+'\n')
 		#I ADDED STARID, DELET DIS
 		#info+="%10d"%int(stars[0][0]-1)
 		targetfile.write(info+'\n')
@@ -237,10 +241,6 @@ while os.path.isfile(fname):
 		fname=namepath+namebase+str(jump)+"_"+str(filecount).zfill(3)+nameroot
 		
 		info=""
-		for i in range(0,len(stars)):
-			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][xcoord])
-			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][mag])
-		targetfile.write(info+'\n')
 	print(Fore.GREEN+"\nJump or end of files detected\n") 
 	#Increment the jump and reset filecount
 	jump += 1
