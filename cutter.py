@@ -48,7 +48,7 @@ for i in range(len(data)):
 		oldmag=float(data[i-1][magid])
 		if not stuck==0:
 			oldmag=float(data[stuck][magid])
-		if(abs(newmag-oldmag)>1 and newmag>oldmag):
+		if(abs(newmag-oldmag)>0.25 and newmag>oldmag):
 			print("Image= %d "%i)
 			mask.append(False)
 			if stuck==0:				
