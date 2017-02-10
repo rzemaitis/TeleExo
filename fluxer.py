@@ -228,14 +228,14 @@ while os.path.isfile(fname):
 		for i in range(0,len(stars)):
 			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][mag])
 			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][magerr])
-        targetfile.write(info+'\n')
-        for i in range(0,len(stars)):
+        	targetfile.write(info+'\n')
+		for i in range(0,len(stars)):
 			print "%d"%i
 			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][xcoord])
 			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][mag])
 		#I ADDED STARID, DELET DIS
 		#info+="%10d"%int(stars[0][0]-1)
-        xmagfile.write(info+'\n')
+		xmagfile.write(info+'\n')
 		#Increment filecount and create a new name
 		filecount += 1
 		globcount += 1
