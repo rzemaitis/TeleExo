@@ -17,6 +17,7 @@ namepath="./Data/"
 namebase="Target_star"
 nameroot=".txt"
 timebase="Time"
+xmagbase="XMag"
 
 magid=1
 
@@ -62,7 +63,7 @@ starfile = open(namepath+namebase+"_trim"+nameroot,"w")
 for i in range(len(lines)):
 	if(mask[i]):
 		starfile.write(lines[i]+'\n')
-
+#Cut time file
 timefile = open(namepath+timebase+nameroot,"r")
 lines = timefile.readlines()
 timefile.close()
@@ -71,5 +72,15 @@ for i in range(len(lines)):
 	if(mask[i]):
 		timefile.write(lines[i])
 
+#Cut xmag file
+xmagfile = open(namepath+xmagbase+nameroot,"r")
+lines = xmagfile.readlines()
+xmagfile.close()
+xmagfile = open(namepath+xmagebase+"_trim"+nameroot,"w")
+for i in range(len(lines)):
+	if(mask[i]):
+		xmagfile.write(lines[i])
+
 timefile.close()
 starfile.close()
+xmagfile.close()

@@ -141,6 +141,7 @@ def afterjumper(stars,fname,cat,xcoord,ycoord,catid,limit):
 targetpath ="./Data/"
 
 targetfile = open(targetpath + "Target_star.txt", "w")
+xmagfile =(open(targetpath + "Xmag.txt","w")
 #targetfixfile = open(targetpath + "Target_star_fixed","w")
 #referencefile = open(targetpath + "Reference_stars","w")
 
@@ -229,13 +230,17 @@ while os.path.isfile(fname):
 			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][magerr])
 		#I ADDED STARID, DELET DIS
 		#info+="%10d"%int(stars[0][0]-1)
-		info+='\n'
-		targetfile.write(info)
+		targetfile.write(info+'\n')
 		#Increment filecount and create a new name
 		filecount += 1
 		globcount += 1
 		fname=namepath+namebase+str(jump)+"_"+str(filecount).zfill(3)+nameroot
-
+		
+		info=""
+		for i in range(0,len(stars)):
+			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][xcoord])
+			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][mag])
+		targetfile.write(info+'\n')
 	print(Fore.GREEN+"\nJump or end of files detected\n") 
 	#Increment the jump and reset filecount
 	jump += 1
@@ -247,6 +252,7 @@ while os.path.isfile(fname):
 #
 #Close all output files
 targetfile.close()
+xmagfile.close()
 #targetfixfile.close()
 #referencefile.close()
 
