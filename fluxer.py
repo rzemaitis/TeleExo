@@ -229,6 +229,7 @@ while os.path.isfile(fname):
 			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][mag])
 			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][magerr])
 		for i in range(0,len(stars)):
+			print "%d"%i
 			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][xcoord])
 			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][mag])
 		targetfile.write(info+'\n')
