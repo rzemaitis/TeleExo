@@ -14,7 +14,7 @@ init(autoreset=True)
 #An initial target-defining function
 def targetfind(stars,fname,cat,xcoord,ycoord):
 	print(Fore.BLUE+"emacs "+fname+"\n")
-	emacscat = subprocess.Popen("emacs "+fname, shell=True)
+#	emacscat = subprocess.Popen("emacs "+fname, shell=True)
 	#CONTINUE HERE, FIX GAIA PLS
 	#gaiacat = subprocess.Popen("gaia "+fname.rstrip(".cat")+".fits&", shell=True)
 	#Gaia denies permission, solve the issue?
@@ -36,8 +36,8 @@ def targetfind(stars,fname,cat,xcoord,ycoord):
 		stars[i][0]=int(read)
 		stars[i][1]=cat[0][int(read)][xcoord]
 		stars[i][2]=cat[0][int(read)][ycoord]
-	emacscat.terminate()
-	emacscat.kill()
+#	emacscat.terminate()
+#	emacscat.kill()
 
 #Finds stars of interest in the next frame
 def nextfind(stars,cat,xcoord,ycoord,catid,limit):
@@ -92,7 +92,7 @@ def nextfind(stars,cat,xcoord,ycoord,catid,limit):
 	print Fore.BLUE+str(mins)
 #Deals with target finding after the jump
 def afterjumper(stars,fname,cat,xcoord,ycoord,catid,limit):
-	emacscat = subprocess.Popen("emacs "+fname, shell=True)
+#	emacscat = subprocess.Popen("emacs "+fname, shell=True)
 	#CONTINUE HERE, FIX GAIA PLS
 	#gaiacat = subprocess.Popen("gaia "+fname.rstrip(".cat")+".fits&", shell=True)
 	#Gaia denies permission, solve the issue?
@@ -128,20 +128,20 @@ def afterjumper(stars,fname,cat,xcoord,ycoord,catid,limit):
 				min=diff
 				starid=j
 		if(min>limit):
-			emacscat.kill()
+#			emacscat.kill()
 			sys.exit(Fore.RED+"SCRIPT PANIC: REFERENCE STAR NOT FOUND")
 		else:
 			stars[i][0]=int(cat[catid][starid][0])-1
 			stars[i][1]=cat[catid][starid][xcoord]
 			stars[i][2]=cat[catid][starid][ycoord]
-	emacscat.terminate()
-	emacscat.kill()
+#	emacscat.terminate()
+#	emacscat.kill()
 
 #Create files for output
 targetpath ="./Data/"
 
 targetfile = open(targetpath + "Target_star.txt", "w")
-xmagfile =(open(targetpath + "Xmag.txt","w")
+xmagfile = open(targetpath + "XMag.txt","w")
 #targetfixfile = open(targetpath + "Target_star_fixed","w")
 #referencefile = open(targetpath + "Reference_stars","w")
 

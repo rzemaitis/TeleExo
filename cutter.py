@@ -76,7 +76,7 @@ for i in range(len(lines)):
 xmagfile = open(namepath+xmagbase+nameroot,"r")
 lines = xmagfile.readlines()
 xmagfile.close()
-xmagfile = open(namepath+xmagebase+"_trim"+nameroot,"w")
+xmagfile = open(namepath+xmagbase+"_trim"+nameroot,"w")
 for i in range(len(lines)):
 	if(mask[i]):
 		xmagfile.write(lines[i])
