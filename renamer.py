@@ -7,7 +7,7 @@ import subprocess
 #Set all filenames
 #Set path
 #namepath="../Exoplanets1/"
-namepath="../4ff/"
+namepath="../Exoplanets1/"
 #Example"../Exoplanets1/qatar1b_r_10s_2_138.fits"
 namebase="qatar1b_r_10s_"
 nameroot=".fits"
@@ -16,8 +16,11 @@ filecount=1
 
 fname=namepath+str(jump)+"_"+str(filecount).zfill(3)+nameroot
 newfname=namepath+namebase+str(jump)+"_"+str(filecount).zfill(3)+nameroot
+#print("Trying "+fname)
 while os.path.isfile(fname):
+	#print("Trying "+fname)
 	while os.path.isfile(fname):
+	#	print("Trying "+fname)
 		emacscat = subprocess.Popen("mv "+fname+" "+newfname, shell=True)
 		emacscat.wait()
 		filecount+=1

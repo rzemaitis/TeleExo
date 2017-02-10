@@ -7,13 +7,13 @@ import numpy as np
 
 #Paths
 targetpath ="./Data/"
-targetname="Target_star.txt"
-timename="Time.txt"
+targetname="Target_star_trim.txt"
+timename="Time_trim.txt"
 fname=targetpath+targetname
 tname=targetpath+timename
 lines=[]
 
-refstars=5
+refstars=4
 magid=1
 
 #Read lines without comments
@@ -51,7 +51,10 @@ for i in range(0,len(lines)):
 
 # Plot values
 for i in range(0,refstars):
-	plt.plot((time[:]),(mag[i][:]))
+	if i==0:
+		plt.plot((time[:]),(mag[i][:]),)
+	else:
+		plt.plot((time[:]),(mag[i][:]),'--')
 # control the axis range
 #plt.xlim(5.5, 18.5)
 #plt.ylim(0, 8.0)

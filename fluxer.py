@@ -13,7 +13,7 @@ init(autoreset=True)
 
 #An initial target-defining function
 def targetfind(stars,fname,cat,xcoord,ycoord):
-	print(Fore.BLUE+"emacs "+fname+".cat\n")
+	print(Fore.BLUE+"emacs "+fname+"\n")
 	emacscat = subprocess.Popen("emacs "+fname, shell=True)
 	#CONTINUE HERE, FIX GAIA PLS
 	#gaiacat = subprocess.Popen("gaia "+fname.rstrip(".cat")+".fits&", shell=True)
@@ -23,7 +23,7 @@ def targetfind(stars,fname,cat,xcoord,ycoord):
 	#os.system("gaia ../Exoplanets1/check.fits&")
 	gaiacat = subprocess.Popen("gaia ../Exoplanets1/check.fits", shell=True)
 	print(Fore.GREEN+"Please find your object and write its number.\n")
-	print(Fore.GREEN+"While you're at it, select " + str((len(stars)-1))+ " target stars from the list:\n")
+	print(Fore.GREEN+"While you're at it, select " + str((len(stars)-1))+ " refernce stars from the list:\n")
 	read = raw_input(Fore.GREEN+"Target star id?\n")
 	read=int(read)-1
 	stars[0][0]=int(read)
@@ -170,7 +170,7 @@ filecount=1
 globcount=1
 
 #How many stars? (Including the target star)
-staramount=5
+staramount=4
 
 #Create a numpy array for storing star id's, x's, y's and flux
 stars=np.zeros((staramount,4))
@@ -247,8 +247,8 @@ while os.path.isfile(fname):
 #
 #Close all output files
 targetfile.close()
-targetfixfile.close()
-referencefile.close()
+#targetfixfile.close()
+#referencefile.close()
 
 
 # CODE DUMP
