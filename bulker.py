@@ -86,10 +86,10 @@ for i in range (0,int(length)):
 	stdevs[i]=np.std(stdev)/math.sqrt(num)
 	tmeans[i]=np.mean(tmean)
 
-outfile = open("Qatar1b.txt")
+outfile = open("Qatar1b.txt","w")
 outfile.write("#The columns are: Time, Mag, Magerr.")
 for i in range(len(means)):
-	info+=str(tmeans[i])
+    info=str(tmeans[i])
 	info+=str(means[i])
 	info+=str(stdevs[i])
 	outfile.write(info+'\n')
