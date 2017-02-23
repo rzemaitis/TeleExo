@@ -14,7 +14,7 @@ init(autoreset=True)
 #An initial target-defining function
 def targetfind(stars,fname,cat,xcoord,ycoord):
 	print(Fore.BLUE+"emacs "+fname+"\n")
-	emacscat = subprocess.Popen("emacs "+fname, shell=True)
+	#emacscat = subprocess.Popen("emacs "+fname, shell=True)
 	#CONTINUE HERE, FIX GAIA PLS
 	#gaiacat = subprocess.Popen("gaia "+fname.rstrip(".cat")+".fits&", shell=True)
 	#Gaia denies permission, solve the issue?
@@ -92,7 +92,7 @@ def nextfind(stars,cat,xcoord,ycoord,catid,limit):
 	print Fore.BLUE+str(mins)
 #Deals with target finding after the jump
 def afterjumper(stars,fname,cat,xcoord,ycoord,catid,limit):
-	emacscat = subprocess.Popen("emacs "+fname, shell=True)
+	#emacscat = subprocess.Popen("emacs "+fname, shell=True)
 	#CONTINUE HERE, FIX GAIA PLS
 	#gaiacat = subprocess.Popen("gaia "+fname.rstrip(".cat")+".fits&", shell=True)
 	#Gaia denies permission, solve the issue?
