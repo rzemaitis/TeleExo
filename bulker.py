@@ -55,35 +55,38 @@ for i in range (0,int(length)):
 	mean=np.zeros(6)
 	stdev=np.zeros(6)
 	tmean=np.zeros(6)
-	if(i+6<len(lines)):
+	if(i*6+6<len(data)):
 		if not i==0:
-				print "Found"
-				num=(i*6/6)-1
+				print "Found in next %d"%i+" length %d"%length
+				num=0
 		else:
-			num=i*6
+			num=0
 		for j in range(i*6,i*6+6):
 			print num
+			print "Current line %d"%(j+1)+" length of all data %d"%len(data)
 			mean[num]+=float(data[j][magid])
 			stdev[num]+=float(data[j][magid])
 			tmean[num]+=float(tdata[j][timeid])
 			num+=1
-		means[i]=np.mean(mean)
-		stdevs[i]=np.std(stdev)
-		tmeans[i]=np.mean(tmean)
 	else:
-		for j in range(i,i+i*6-len(data)):
-			if not i==0:
-				print "Found"
-				num=(j/6)-1
-			else:
-				num=j
+		print "Found last one"
+		#for j in range(i,i+i*6-len(data)):
+		num=0
+		mean=np.zeros(len(data)-i*6)
+		stdev=np.zeros(len(data)-i*6)
+		tmean=np.zeros(len(data)-i*6)
+		for j in range(i*6,len(data)):
+			print "Current line %d"%(j+1)+" length of all data %d"%len(data)
 			mean[num]+=float(data[i][magid])
 			stdev[num]+=float(data[i][magid])
+			print str(stdev[num])
 			tmean[num]+=float(tdata[j][timeid])
-		means[i]=np.mean(mean)
-		stdevs[i]=np.std(stdev)
-		tmeans[i]=np.mean(tmean)
+			num+=1
+	means[i]=np.mean(mean)
+	stdevs[i]=np.std(stdev)/math.sqrt(num)
+	tmeans[i]=np.mean(tmean)
 
+<<<<<<< HEAD
 outfile = open("Qatar1b.txt")
 outfile.write("#The columns are: Time, Mag, Magerr.")
 for i in range(len(means)):
@@ -91,6 +94,16 @@ for i in range(len(means)):
 	info+=str(means[i])
 	info+=str(stdevs[i])
 	outfile.write(info+'\n')
+=======
+outfile = open(targetpath+"Qatar1b.txt", "w")
+for i in range(len(means)):
+	info=""
+	info+="%15d"%int(tmeans[i])
+	info+="%15f"%means[i]
+	info+="%15f"%stdevs[i]
+	outfile.write(info+'\n')
+
+>>>>>>> 813940b40bef397c8ae87a0a94a6f70f4c001d43
 outfile.close()
 
 
