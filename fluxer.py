@@ -229,10 +229,12 @@ while os.path.isfile(fname):
 			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][mag])
 			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][magerr])
         	targetfile.write(info+'\n')
-		for i in range(0,len(stars)):
+		info="%6d"%globcount
+		for i in range(1,len(stars)):
 			print "%d"%i
 			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][xcoord])
 			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][mag])
+			info +="%15f"%float(cat[globcount-1][int(stars[i][0])][magerr])
 		#I ADDED STARID, DELET DIS
 		#info+="%10d"%int(stars[0][0]-1)
 		xmagfile.write(info+'\n')
