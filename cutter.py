@@ -113,14 +113,14 @@ lines = xmagfile.readlines()
 xmagfile.close()
 jump=1
 xmagfile = open(namepath+xmagbase+"_"+str(jump)+"_trim"+nameroot,"w")
-xmagfile.write("#The columns are: Time, (XCoord, Mag, Magerr)x3.")
+xmagfile.write("#The columns are: Time, (XCoord, Mag, Magerr)x3.\n")
 print Fore.YELLOW+"Jump count - %d"%jump
 for i in range(len(lines)):
 	if float(tlines[i])-float(tlines[i-1])>50 and not i==0:
 		jump+=1
 		xmagfile.close()
 		xmagfile = open(namepath+xmagbase+"_"+str(jump)+"_trim"+nameroot,"w")
-		xmagfile.write("#The columns are: Time, (XCoord, Mag, Magerr)x3.")
+		xmagfile.write("#The columns are: Time, (XCoord, Mag, Magerr)x3.\n")
 		print Fore.YELLOW+"Jump count - %d"%jump
 		if(mask[i]):
 			xmagfile.write(lines[i].replace(str(i+1),tlines[i].rstrip('\n'),1))

@@ -87,11 +87,11 @@ for i in range (0,int(length)):
 	tmeans[i]=np.mean(tmean)
 
 outfile = open("Qatar1b.txt","w")
-outfile.write("#The columns are: Time, Mag, Magerr.")
+outfile.write("#The columns are: Time, Mag, Magerr.\n")
 for i in range(len(means)):
-    info=str(tmeans[i])
-	info+=str(means[i])
-	info+=str(stdevs[i])
+    	info="%15f"%tmeans[i]
+	info+="%15f"%means[i]
+	info+="%15f"%stdevs[i]
 	outfile.write(info+'\n')
 outfile.close()
 
