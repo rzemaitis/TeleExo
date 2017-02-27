@@ -54,9 +54,13 @@ for i in range(0,stars):
 # control the axis range
 #plt.xlim(5.5, 18.5)
 #plt.ylim(0, 8.0)
-plt.xlabel('Time (seconds)')
-plt.ylabel('Magnitude')
-plt.title('Light curve callibrated')
+title_font = {'size':'40', 'color':'black','weight':'normal','verticalalignment':'bottom'} 
+axis_font = {'size':'28'}
+plt.xlabel('Time (seconds)', **axis_font)
+plt.ylabel('Magnitude', **axis_font)
+plt.title('Lightcurve (calibrated)', **title_font)
+plt.xticks(fontsize=15)    # fontsize of the tick labels
+plt.yticks(fontsize=15)    # fontsize of the tick labels
 #plt.gca().set_color_cycle(["red", "green", "blue"])
 plt.gca().invert_yaxis()
 plt.show()

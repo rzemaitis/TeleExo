@@ -9,6 +9,8 @@ import numpy as np
 targetpath ="./Data/"
 targetname="Target_star_trim.txt"
 timename="Time_trim.txt"
+#targetname="Target_star.txt"
+#timename="Time.txt"
 fname=targetpath+targetname
 tname=targetpath+timename
 lines=[]
@@ -58,9 +60,16 @@ for i in range(0,refstars):
 # control the axis range
 #plt.xlim(5.5, 18.5)
 #plt.ylim(0, 8.0)
-plt.xlabel('Time (seconds)')
-plt.ylabel('Magnitude')
-plt.title('Light curve uncallibrated')
+#Change the font
+# Set the font dictionaries (for plot title and axis titles)
+title_font = {'size':'40', 'color':'black','weight':'normal','verticalalignment':'bottom'} 
+axis_font = {'size':'28'}
+plt.xlabel('Time (seconds)', **axis_font)
+plt.ylabel('Magnitude', **axis_font)
+plt.title('Lightcurves (trimmed)', **title_font)
+plt.xticks(fontsize=15)    # fontsize of the tick labels
+plt.yticks(fontsize=15)    # fontsize of the tick labels
+# Bottom vertical alignment for more space
 #plt.gca().set_color_cycle(["red", "green", "blue"])
 plt.gca().invert_yaxis()
 plt.show()

@@ -7,7 +7,7 @@ import numpy as np
 
 #Paths
 targetpath ="./Data/"
-targetname="Target_star.txt"
+targetname="Apcheck.txt"
 fname=targetpath+targetname
 
 lines=[]
@@ -34,6 +34,12 @@ plot = plt.plot(apsizelist,fluxlist,'ro')
 # control the axis range and labels
 #plt.xlim(5.5, 18.5)
 #plt.ylim(0, 8.0)
-plt.xlabel('Time')
-plt.ylabel('Magnitude')
+plt.axhline(y=45, color='b', linestyle='-')
+title_font = {'size':'40', 'color':'black','weight':'normal','verticalalignment':'bottom'} 
+axis_font = {'size':'28'}
+plt.xlabel('Aperture diameter (pixels)', **axis_font)
+plt.ylabel('Flux', **axis_font)
+plt.title('Aperture analysis', **title_font)
+plt.xticks(fontsize=15)    # fontsize of the tick labels
+plt.yticks(fontsize=15)    # fontsize of the tick labels
 plt.show()
