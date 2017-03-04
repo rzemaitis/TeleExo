@@ -50,7 +50,6 @@ data=[]
 for i in range (0,len(lines)):
 	a=lines[i].split()
 	data.append(a)
-
 #Boolean list for masking bad lines
 mask=[]
 #Index stopper to get rid of more than one bad dip
@@ -121,7 +120,7 @@ for i in range(len(lines)):
 		xmagfile.close()
 		xmagfile = open(namepath+xmagbase+"_"+str(jump)+"_trim"+nameroot,"w")
 		xmagfile.write("#The columns are: Time, (XCoord, Mag, Magerr)x3.\n")
-		print Fore.YELLOW+"Jump count - %d"%jump
+		print Fore.YELLOW+"Jump count - %d with interval %d"%(jump, int(tlines[i])-int(tlines[i-1]))
 		if(mask[i]):
 			xmagfile.write(lines[i].replace(str(i+1),tlines[i].rstrip('\n'),1))
 	else:

@@ -77,16 +77,15 @@ for i in range (0,int(length)):
 		tmean=np.zeros(len(data)-i*6)
 		for j in range(i*6,len(data)):
 			print "Current line %d"%(j+1)+" length of all data %d"%len(data)
-			mean[num]+=float(data[i][magid])
-			stdev[num]+=float(data[i][magid])
-			print str(stdev[num])
+			mean[num]+=float(data[j][magid])
+			stdev[num]+=float(data[j][magid])
 			tmean[num]+=float(tdata[j][timeid])
 			num+=1
 	means[i]=np.mean(mean)
 	stdevs[i]=np.std(stdev)/math.sqrt(num)
 	tmeans[i]=np.mean(tmean)
 
-outfile = open("Qatar1b.txt","w")
+outfile = open(targetpath+"Qatar1b.txt","w")
 outfile.write("#The columns are: Time, Mag, Magerr.\n")
 for i in range(len(means)):
     	info="%15f"%tmeans[i]

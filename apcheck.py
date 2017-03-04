@@ -40,7 +40,7 @@ def fluxfind(data,fname,xcoord,ycoord,fluxid,limit):
 	if(min>limit or starid==0):
 		sys.exit("SCRIPT PANIC: STAR NOT FOUND")
 	else:
-		return float(data[starid][fluxid])
+		return starid
 
 
 
@@ -71,24 +71,20 @@ pname=proppath+"default.sex"
 oldap=5
 #Mark flux id in catalogue
 fluxid=1
+fluxerrid=2
 #Hardwired X and Y coordinates
 xcoord=2667
 ycoord=1774
 limit=5
-
+#How large and small the apertures?
+minap=5
+maxap=80
 #Lists for plotting
 apsizelist=[]
 fluxlist=[]
 
-for i in range(5,100):
+for i in range(minap,maxap):
 	ap=i
-	#Execute sextractor
-	#print("sextractor "+ fname+" -c "+namepath+"config/default.sex")
-	process = subprocess.Popen("sextractor "+ fname+" -c "+namepath+"config/default.sex", shell=True)
-	process.wait()
-	#Change name of test.cat to name of fits file, but with .cat extension
-	rename = subprocess.Popen("mv "+defaultcat+" "+namepath+fname.replace(nameroot,catname), shell=True)
-	rename.wait()
 	#Change param
 	#Read lines without comments
 	with open(pname) as f:
@@ -97,8 +93,15 @@ for i in range(5,100):
 				if line.startswith("PHOT_APERTURES   "):
 					old_string=line
 	f.close()
-	new_string="PHOT_APERTURES   "+str(ap)+"              # MAG_APER aperture diameter(s) in pixels"
+	new_string="PHOT_APERTURES   "+str(ap)+"              # MAG_APER aperture diameter(s) in pixels\n"
 	inplace_change(pname,old_string, new_string)
+	#Execute sextractor
+	#print("sextractor "+ fname+" -c "+namepath+"config/default.sex")
+	process = subprocess.Popen("sextractor "+ fname+" -c "+namepath+"config/default.sex", shell=True)
+	process.wait()
+	#Change name of test.cat to name of fits file, but with .cat extension
+	rename = subprocess.Popen("mv "+defaultcat+" "+namepath+fname.replace(nameroot,catname), shell=True)
+	rename.wait()
 	#Create a line array and a data array
 	lines=[]
 	data=[]
@@ -115,9 +118,13 @@ for i in range(5,100):
 		a=lines[j].split()
 		data.append(a)
 	#Find flux
-	flux=fluxfind(data,cname,xcoord,ycoord,fluxid,limit)
+	id=fluxfind(data,cname,xcoord,ycoord,fluxid,limit)
+	flux=float(data[id][fluxid])
+	fluxerr=float(data[id][fluxerrid])
 	#Write flux into file
-	targetfile.write("%5d"%i+"%10f"%flux+'\n')
+	info="%5d"%i
+	info+="%10.2f %10.2f"%(flux,fluxerr)
+	targetfile.write(info+'\n')
 	apsizelist.append(str(i))
 	fluxlist.append(str(flux))
 	oldap=ap
@@ -130,15 +137,6 @@ old_string="PHOT_APERTURES   "+str(oldap)+"              # MAG_APER aperture dia
 new_string="PHOT_APERTURES   "+str(ap)+"              # MAG_APER aperture diameter(s) in pixels"
 inplace_change(pname,old_string, new_string)
 
-
-# Plot values
-plot = plt.plot(x,MSI,'ro')
-# control the axis range and labels
-#plt.xlim(5.5, 18.5)
-#plt.ylim(0, 8.0)
-plt.xlabel('Aperture size')
-plt.ylabel('Flux')
-plt.show()
 
 targetfile.close()
 #print(Fore.RED + 'some red text')
